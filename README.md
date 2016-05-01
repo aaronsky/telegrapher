@@ -12,7 +12,7 @@ To run an Arduino board with telegrapher, it must be a compatible board with [Jo
 
 telegrapher is designed to work with these schematics:
 
-{placeholder}
+![pcomp-proj4_bb](https://cloud.githubusercontent.com/assets/10502938/14944610/2987490c-0fc6-11e6-851c-3066b69dfe47.png)
 
 ## Usage
 
