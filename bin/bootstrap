@@ -10,8 +10,7 @@ const argv = require('yargs')
             .option('p', {
                 description: 'port to open server on',
                 alias: 'port'
-            })
-            .demand('p');
+            });
        })
        .command('client', 'Bootstraps a client', function (yargs) {
            return yargs

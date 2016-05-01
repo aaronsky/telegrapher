@@ -1,115 +1,64 @@
-const five = require("johnny-five"),
-    SAMPLE_WINDOW = 50,
-    MIC_PIN = "A0",
-    SPEAKER_PIN = 2,
-    MAJOR_SCALE = {
-        c4: 262,
-        d4: 294,
-        e4: 330,
-        f4: 349,
-        g4: 392,
-        a4: 440,
-        b4: 494,
-        c5: 523,
-    };
+const five = require('johnny-five'),
+    BUTTON_PIN = process.env.BUTTON_PIN || 2,
+    SPEAKER_PIN = process.env.BUTTON_PIN || 3,
+    SPEAKER_FREQ = 587;
 
-var socket, user, start, volts, startTime, mic, piezo,
-    sample = 0,
-    signalMin = 1024,
-    signalMax = 0;
-
-var toSpeakerFreq = function (val, inMin, inMax, outMin, outMax) {
-    var range = outMax - outMin;
-    var num = range * (val - inMin) / (inMax - inMin) + outMin;
-    num = (num < outMin) ? outMin : num;
-    num = (num > outMax) ? outMax : num;
-    return num;
+const Note = {
+    OFF: 0,
+    SHORT: 1,
+    LONG: 2
 };
 
+var socket, user, button, piezo, noteLength;
 
-/**
- * A function that keeps track of how many milliseconds
- * it has been since the board started. It checks to see if 
- * there is already a value associated with start, and if so,
- * returns the current time minus the start time. Otherwise,
- * it return 0
- */
-var millis = function () {
-    if (start instanceof Date) {
-        var current = new Date();
-        return current - start;
-    }
-    return 0;
+var onButtonDown = function () {
+    noteLength = Note.SHORT;
 };
 
-var resetSignal = function () {
-    signalMax = 0;
-    signalMin = 1024;
+var onButtonHold = function () {
+    noteLength = Note.LONG;
 };
 
-/**
- * Map the output to a value in the Piezo notes object
- */
-var mapToNote = function (val, scale, threshold) {
-    var closestVal = 0;
-    if (val > threshold) {
-        for (var key in scale) {
-            if (scale.hasOwnProperty(key)) {
-                if (scale[key] < val && scale[key] > closestVal) {
-                    closestVal = scale[key];
-                }
-            }
+var onButtonUp = function () {
+    console.log(noteLength === Note.LONG ? 'Long press' : 'Short press');
+    socket.emit('talking', {
+        note: noteLength,
+        name: user.name,
+        id: user.id
+    });
+    noteLength = Note.OFF;
+};
+
+var onReceive = function (note) {
+    if (piezo) {
+        var duration = note * 500; // in milliseconds
+        if (duration > 0) {
+            piezo.frequency(SPEAKER_FREQ, duration);
+        } else {
+            piezo.noTone();
         }
     }
-    return closestVal;
 };
 
-var input = function () {
-    rawMic = this.value;
-};
-
-var resample = function (micVal) {
-    if (millis() - startTime < SAMPLE_WINDOW) {
-        if (micVal < 1024) {
-            if (micVal > signalMax) {
-                signalMax = micVal;
-            } else if (micVal < signalMin) {
-                signalMin = micVal;
-            }
-        }
+var output = function (data) {
+    if (typeof data === 'number') {
+        onReceive(data);
+    } else if (typeof data.note === 'number') {
+        onReceive(data.note);
     } else {
-        var peakToPeak = signalMax - signalMin;
-        volts = peakToPeak * 3.3 / 1024;
-        
-        resetSignal();
-        startTime = millis();
-        
-        socket.emit('talking', {
-            mic: volts,
-            name: user.name,
-            id: user.id
-        });
-    }
-};
-
-var output = function (volts) {
-    var out = toSpeakerFreq(volts, .018, .1, 0, 1047);
-    var mapped = mapToNote(out, MAJOR_SCALE, 262);
-    if (mapped > 0) {
-        piezo.frequency(mapped, time);
-    } else {
-        piezo.noTone();
+        console.log('Stay silent friend');
     }
 };
 
 var ready = function () {
-    mic = new five.Sensor(MIC_PIN);
+    button = new five.Button(BUTTON_PIN);
     piezo = new five.Piezo(SPEAKER_PIN);
-    start = new Date();
-    startTime = millis();
 
-    mic.on("data", input);
-    this.loop(1, resample);
+    noteLength = Note.OFF;
+
+    button.on('down', onButtonDown);
+    button.on('hold', onButtonHold);
+    button.on('up', onButtonUp);
 };
 
 module.exports = function (sock, usr) {
@@ -122,17 +71,11 @@ module.exports = function (sock, usr) {
     socket = sock;
     user = usr;
 
-    var board = new five.Board();
-    board.on("ready", ready);
-    board.output = function (data) {
-        if (typeof data === 'number') {
-            output(data);
-        } else if (typeof data.mic === 'number') {
-            output(data.mic)
-        } else {
-            console.log('Stay silent friend');
-        }
-    }
+    var board = new five.Board({repl: false});
+
+    board.on('ready', ready);
+    board.output = output;
 
     return board;
-}
+};
+
