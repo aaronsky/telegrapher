@@ -38,7 +38,7 @@ const argv = require('yargs')
 var type = argv._[0]
 var app = createApp(type, argv);
 
-const PORT = argv.port || process.env.NODE_PORT || 9000;
+const PORT = argv.port || process.env.PORT || process.env.NODE_PORT || 9000;
 var server = http.Server(app);
 
 var io = app.io;
