@@ -5,6 +5,9 @@
   "bin": {
     "phone": "bin/bootstrap"
   },
+  "scripts": {
+    "start": "node bin/bootstrap"
+  },
   "contributors": [
     "Aaron Sky <aaronsky@skyaaron.com> (http://skyaaron.com)",
     "Ben Wilcox <reccanti@gmail.com> (http://benjwilcox.com/)"

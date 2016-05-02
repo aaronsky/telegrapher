@@ -3,6 +3,11 @@ function User(name, id) {
     this.id = id || generateId();
 };
 var generateId = function () {
-    return '7777777777';
+    var id = '';
+    for (var i = 0; i < 7; i++) {
+        var digit = Math.floor(Math.random() * 10);
+        id += digit;
+    }
+    return id;
 }
 module.exports = User;
