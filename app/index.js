@@ -20,6 +20,7 @@ module.exports = function (type, options) {
         app.set('views', path.join(__dirname, 'server', 'views'));
         app.set('view engine', 'pug');
         
+        console.log(path.join(__dirname, 'server', 'views'));
         app.get('/', function (req, res) {
             res.render('index');
         });
