@@ -1,7 +1,7 @@
 var http = require('http');
 var socketio = require('socket.io');
 
-module.exports = function (options) {
+var createIo = function (options) {
     var io = socketio();
     
     io.on('connection', function (socket) {
@@ -13,3 +13,8 @@ module.exports = function (options) {
     
     return io;
 };
+
+module.exports = {
+    io: createIo,
+    route: require('./routes')
+}

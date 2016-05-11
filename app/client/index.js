@@ -2,7 +2,7 @@ var socketio = require('socket.io-client');
 var User = require('./user');
 var createBoard = require('./board');
 
-module.exports = function (options) {
+var createIo = function (options) {
     var name = options.name || 'User';
     var user = new User(name);
 
@@ -21,3 +21,8 @@ module.exports = function (options) {
         }
     });
 };
+
+module.exports = {
+    io: createIo,
+    route: require('./routes')
+}
