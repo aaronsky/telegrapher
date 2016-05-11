@@ -24,6 +24,10 @@ module.exports = function (type, options) {
         app.get('/', function (req, res) {
             res.render('index');
         });
+        
+        app.get('/room/:id', function (req, res) {
+            res.render('room', { roomname: id });
+        });
     }
     
     // error handlers
