@@ -6,6 +6,7 @@ window.addEventListener('load', function () {
 
 function updateList(socket, list) {
     socket.on('roomAdded', function (data) {
+        console.log('room added');
         console.log(data.rooms);
     });
 };

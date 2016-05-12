@@ -11,7 +11,9 @@ var createIo = function (options) {
         });
         
         socket.join('testroom');
-        socket.emit('roomAdded', {
+        
+        console.log('joining room');
+        io.to('testroom').emit('roomAdded', {
             rooms: io.sockets.adapter.rooms
         });
     });
