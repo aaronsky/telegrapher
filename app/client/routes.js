@@ -1,3 +1,5 @@
+var room = require('./room');
+
 module.exports = function (app) {
     app.get('/', function (req, res) {
         console.log('rendering index');
@@ -13,6 +15,7 @@ module.exports = function (app) {
     
     app.get('/room/:id', function (req, res) {
         res.render('room', { roomname: req.params.id });
+        room.joinRoom(req.params.id);
     });
     
     // error handlers

@@ -1,6 +1,7 @@
 var socketio = require('socket.io-client');
 var User = require('./user');
 var createBoard = require('./board');
+var room = require('./room');
 
 var createIo = function (options) {
     var name = options.name || 'User';
@@ -8,10 +9,19 @@ var createIo = function (options) {
 
     var socket = socketio(options.address);
     var board = createBoard(socket, user);
+    room.init(socket);
 
     socket.on('connect', function () {
         console.log(name + ' is well connected');
+        
+        //TODO: TEST TO MAKE SURE THIS WORKS
+        socket.emit('talking', {
+            note: 1,
+            name: 'bob',
+            id: '1',
+        });
     });
+    
     socket.on('listening', function (data) {
         if (data.id !== user.id) {
             console.log('Received voice data from ' + data.id);
@@ -20,6 +30,8 @@ var createIo = function (options) {
             console.log('Don\'t listen to yourself');
         }
     });
+    
+    // return socket;
 };
 
 module.exports = {

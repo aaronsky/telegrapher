@@ -5,12 +5,17 @@ var createIo = function (options) {
     var io = socketio();
     
     io.on('connection', function (socket) {
-        socket.on('talking', function (data) {
-            console.log ('Received data from ' + data.name + '@' + data.id + '. Sending to others...');
-            socket.emit('listening', data);
-        });
         
         socket.join('testroom');
+        
+        socket.on('talking', function (data) {
+            var msg = 'Received data from ' + data.name + '@' + data.id + '. Sending to others...';
+            io.to('testroom').emit('msgReceived', {
+                msg: msg
+            });
+            console.log(msg);
+            io.to('testroom').emit('listening', data);
+        });
         
         console.log('joining room');
         io.to('testroom').emit('roomAdded', {
