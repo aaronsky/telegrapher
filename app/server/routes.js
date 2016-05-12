@@ -1,5 +1,11 @@
 module.exports = function (app) {
     
+    
+    app.get('/', function (req, res) {
+        console.log('rendering index');
+        res.render('index');
+    });
+    
     // error handlers
     // development error handler
     // will print stacktrace

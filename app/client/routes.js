@@ -1,10 +1,18 @@
 module.exports = function (app) {
     app.get('/', function (req, res) {
+        console.log('rendering index');
         res.render('index');
     });
 
+    app.post('/room', function (req, res) {
+        var name = req.body.room;
+        console.log(req.body);
+        req.method = 'GET';
+        res.redirect(200, '/room/' + name);
+    });
+    
     app.get('/room/:id', function (req, res) {
-        res.render('room', { roomname: id });
+        res.render('room', { roomname: req.params.id });
     });
     
     // error handlers

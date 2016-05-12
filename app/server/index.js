@@ -9,6 +9,11 @@ var createIo = function (options) {
             console.log ('Received data from ' + data.name + '@' + data.id + '. Sending to others...');
             socket.emit('listening', data);
         });
+        
+        socket.join('testroom');
+        socket.emit('roomAdded', {
+            rooms: io.sockets.adapter.rooms
+        });
     });
     
     return io;

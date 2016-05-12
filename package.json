@@ -15,6 +15,7 @@
   "license": "MIT",
   "preferGlobal": true,
   "dependencies": {
+    "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "johnny-five": "^0.9.39",
     "pug": "^0.1.0",

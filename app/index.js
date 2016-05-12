@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var path = require('path');
 
 module.exports = function (type, options) {
@@ -15,9 +16,14 @@ module.exports = function (type, options) {
 
     var app = express();
 
-    app.set(express.static(path.join(__dirname, type, 'public')));
+    console.log(path.join(__dirname, type, 'public'));
+    
+    // app.set(express.static(path.join(__dirname, type, 'public')));
+    app.use('/assets', express.static(path.join(__dirname, type, 'public')));
     app.set('views', path.join(__dirname, type, 'views'));
     app.set('view engine', 'pug');
+    
+    app.use(bodyParser.urlencoded({ extended: false }));
 
     app = model.route(app);
     app.io = model.io(options);

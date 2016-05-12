@@ -1,4 +1,7 @@
 extends ./layout.pug
 
 block content
-    p Hello World
+    form#domoForm(class="roomForm", name="roomForm", action="/room", method="POST")
+        label(for="room") Room Name: 
+        input#roomName(type="text", name="room", placeholder="Room Name")
+        input#roomSubmit(class="roomSubmit", type="submit")
