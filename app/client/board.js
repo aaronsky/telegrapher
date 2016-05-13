@@ -1,7 +1,7 @@
 const five = require('johnny-five'),
     BUTTON_PIN = process.env.BUTTON_PIN || 2,
     SPEAKER_PIN = process.env.BUTTON_PIN || 3,
-    SPEAKER_FREQ = 587;
+    SPEAKER_FREQ = 523;
 
 const Note = {
     OFF: 0,
