@@ -28,6 +28,7 @@ var createIo = function (options) {
             board.output(data);
         } else {
             console.log('Don\'t listen to yourself');
+            board.output(data);
         }
     });
     

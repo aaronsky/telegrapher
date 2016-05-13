@@ -22,6 +22,10 @@ const argv = require('yargs')
                 description: 'name of client',
                 alias: 'name'
             })
+            .option('p', {
+                description: 'port to open the client on',
+                alias: 'port'
+            })
             .demand('a');
        })
        .demand(1, "Must run either 'phone server' or 'phone client' to use.")
@@ -31,7 +35,7 @@ const argv = require('yargs')
        .alias('version', 'v')
        .example('phone server -p 5000', 'Bootstraps a server on port \'5000\'')
        .example('phone client -a http://localhost:5000', 'Bootstraps a client that will connect to \'https://localhost:5000\'')
-       .epilog('For more information, visit https://github.com/reccanti/arduino-iphone')
+       .epilog('For more information, visit https://github.com/aaronsky/telegrapher')
        .showHelpOnFail(true)
        .argv;
 
