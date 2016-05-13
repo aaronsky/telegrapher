@@ -1,0 +1,21 @@
+body {
+    background: url('/assets/images/background2.png');
+    background-size: 100% auto;
+}
+
+.header {
+    font-size: 4rem;
+    color: #E06C22;
+    text-align: center;
+    margin: 4rem 0;
+    font-family: Garamond, Georgia, times, serif;
+}
+
+.message_container {
+    margin: 0 auto;
+    height: 500px;
+    width: 400px;
+    background-color: rgba(255, 255, 255, .25);
+    border: 1px solid rgba(255, 255, 255, 1);
+    border-radius: 10px;
+}
