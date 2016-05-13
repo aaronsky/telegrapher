@@ -1,5 +1,11 @@
+var Note = {
+    OFF: 0,
+    SHORT: 1,
+    LONG: 2
+};
+
 window.addEventListener('load', function () {
-    var list = document.getElementById('container');
+    var list = $('#message_container');
     
     var socket = io();
         //     //TODO: TEST TO MAKE SURE THIS WORKS
@@ -20,8 +26,15 @@ function updateList(socket, list) {
     });
 };
 
-function listenForInput(socket, container) {
-    socket.on('listening', function (data) {
+function listenForInput(socket, list) {
+    socket.on('listening', function (data) {        
+        var str = '';
+        if (data.note === Note.SHORT) {
+            str = '.';
+        } else if (data.note === Note.LONG) {
+            str = '_';
+        }
+        list.prepend(str);
         console.log('I have listened');
         console.log(data);
     });

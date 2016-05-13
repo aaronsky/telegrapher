@@ -1,9 +1,10 @@
 extends ./layout.pug
 
 block scripts
+    script(src="https://code.jquery.com/jquery-2.2.3.min.js", integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=", crossorigin="anonymous")
     script(src="/socket.io/socket.io.js")
     script(src="/assets/javascripts/socketHandler.js")
         
 block content
     h1.header Telegrapher
-    .message_container
+    div(id="message_container", class="message_container")
