@@ -11,8 +11,29 @@ const Note = {
 
 var socket, user, button, piezo, noteLength;
 
+var counter = 0;
+var emitted = false;
+var buttonDown = false;
+var loop = function () {
+    counter++;
+    if (counter > 1000 && !emitted && !buttonDown) {
+        emitted = true;
+        socket.emit('talking', {
+            note: Note.OFF,
+            name: user.name,
+            id: user.id
+        });
+    }
+};
+var resetCounter = function () {
+    counter = 0;
+    emitted = false;
+    buttonDown = false;
+};
+
 var onButtonDown = function () {
     noteLength = Note.SHORT;
+    buttonDown = true;
 };
 
 var onButtonHold = function () {
@@ -27,6 +48,7 @@ var onButtonUp = function () {
         id: user.id
     });
     noteLength = Note.OFF;
+    resetCounter();
 };
 
 var onReceive = function (note) {
@@ -59,6 +81,8 @@ var ready = function () {
     button.on('down', onButtonDown);
     button.on('hold', onButtonHold);
     button.on('up', onButtonUp);
+    
+    this.loop(1, loop);
 };
 
 module.exports = function (sock, usr) {

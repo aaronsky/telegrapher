@@ -33,6 +33,8 @@ function listenForInput(socket, list) {
             str = '.';
         } else if (data.note === Note.LONG) {
             str = '_';
+        } else if (data.note === Note.OFF) {
+            str = ' ';
         }
         list.prepend(str);
         console.log('I have listened');
